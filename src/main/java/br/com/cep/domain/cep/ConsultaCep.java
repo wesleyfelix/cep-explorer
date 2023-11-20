@@ -113,10 +113,39 @@ public class ConsultaCep {
         }
     }
 
-    public static String incrementarStringNumerica(String input) {
+    public Cep getEndereco(String cep){
+        if(repository.findAllByCep(formatarCEP(cep)) == null){
+            try {
+                HttpClient httpClient = HttpClient.newBuilder()
+                        .connectTimeout(Duration.of(1, MINUTES))
+                        .build();
 
-        int numero = Integer.parseInt(input);
-        numero++;
-        return String.format("%08d", numero);
+                HttpRequest httpRequest = HttpRequest.newBuilder()
+                        .GET()
+                        .uri(URI.create(viaCepUrl+cep+"/json"))
+                        .build();
+
+                HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                if(!httpResponse.body().contains("erro")){
+                    Cep cepObject = objectMapper.readValue(httpResponse.body(), Cep.class);
+                    repository.save(cepObject);
+                    log.info("CEP Salvo no banco: " + formatarCEP(cep));
+                    return cepObject;
+                }else{
+                    return new Cep(null, null, null, null, null, null, null, null, null, null, null);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
+            }
+        }else{
+            log.info("CEP já existe no banco: " + formatarCEP(cep));
+            return repository.findAllByCep(formatarCEP(cep));
+        }
     }
 }

@@ -1,5 +1,6 @@
 package br.com.cep.controller;
 
+import br.com.cep.domain.cep.CepResponse;
 import br.com.cep.domain.cep.ConsultaCep;
 import br.com.cep.domain.distancia.ConsultaDistancia;
 import br.com.cep.domain.distancia.Distancia;
@@ -38,6 +39,11 @@ public class CepController {
         }else {
             return ResponseEntity.badRequest().body("deu ruim pae");
         }
+    }
+
+    @GetMapping("/{cep}")
+    public ResponseEntity getEndereco(@PathVariable String cep){
+        return ResponseEntity.ok(new CepResponse(consultaCep.getEndereco(cep)));
     }
 
 }

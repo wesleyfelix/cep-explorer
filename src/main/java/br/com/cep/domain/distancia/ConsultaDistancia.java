@@ -38,21 +38,27 @@ public class ConsultaDistancia {
 
     public Distancia consultaDistanciaOrigemDestino(String cepOrigem, String cepDestino) throws IOException, InterruptedException {
 
-        Cep origem = cepRepository.findAllByCep(formatarCEP(cepOrigem));
-        Cep destino = cepRepository.findAllByCep(formatarCEP(cepDestino));
-        String urlGoogle = "https://www.google.com/maps/dir/";
-        String urlConsulta  = urlGoogle + origem.getLogradouro() + "+" + origem.getLocalidade() + "+" + origem.getUf() + "/" +
-                destino.getLogradouro() + "+" + destino.getLocalidade() + "+" + destino.getUf();
+        if(distanciaRepository.findAllByCepOrigemDestino(formatarCEP(cepOrigem), formatarCEP(cepDestino)) == null){
+            log.info("Inicinando consulta da distancia entre os CEPs");
+            Cep origem = cepRepository.findAllByCep(formatarCEP(cepOrigem));
+            Cep destino = cepRepository.findAllByCep(formatarCEP(cepDestino));
+            String urlGoogle = "https://www.google.com/maps/dir/";
+            String urlConsulta  = urlGoogle + origem.getLogradouro() + "+" + origem.getLocalidade() + "+" + origem.getUf() + "/" +
+                    destino.getLogradouro() + "+" + destino.getLocalidade() + "+" + destino.getUf();
 
-        BrowserSetup browserSetup = new BrowserSetup();
-        ConsultaDistanciaBrowser calculaDistancia = new ConsultaDistanciaBrowser(browserSetup.getDriver());
-        String getDistancia = calculaDistancia.getDistancia(urlConsulta);
-        browserSetup.tearDown();
+            BrowserSetup browserSetup = new BrowserSetup();
+            ConsultaDistanciaBrowser calculaDistancia = new ConsultaDistanciaBrowser(browserSetup.getDriver());
+            String getDistancia = calculaDistancia.getDistancia(urlConsulta);
+            browserSetup.tearDown();
+            log.info("Finalizou consulta da distancia entre os CEPs");
+            Distancia distancia = new Distancia(null, formatarCEP(cepOrigem), formatarCEP(cepDestino), urlConsulta, getDistancia);
 
-        Distancia distancia = new Distancia(null, cepOrigem, cepDestino, urlConsulta, getDistancia);
-
-        distanciaRepository.save(distancia);
-        return distancia;
+            distanciaRepository.save(distancia);
+            return distancia;
+        }else{
+            log.info("Distância já calculada na base.");
+            return distanciaRepository.findAllByCepOrigemDestino(formatarCEP(cepOrigem), formatarCEP(cepDestino));
+        }
     }
 
     public static String formatarCEP(String cep) {
