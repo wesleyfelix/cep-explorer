@@ -1,4 +1,4 @@
-package br.com.cep.domain;
+package br.com.cep.domain.cep;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
