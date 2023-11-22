@@ -16,8 +16,9 @@ public class ConsultaDistanciaBrowser {
 
     public String getDistancia(String url) throws IOException, InterruptedException {
         driver.get(url);
+        Thread.sleep(500);
         driver.findElement(By.xpath("//img[@aria-label='A pé']")).click();
-        Thread.sleep(1500);
+        Thread.sleep(1800);
         String distancia = driver.findElement(By.xpath("/html/body/div[3]/div[8]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[4]/div[1]/div[1]/div/div[1]/div[2]")).getText();
         System.out.println(distancia);
         return distancia;

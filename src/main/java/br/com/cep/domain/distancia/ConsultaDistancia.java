@@ -38,6 +38,10 @@ public class ConsultaDistancia {
 
     public Distancia consultaDistanciaOrigemDestino(String cepOrigem, String cepDestino) throws IOException, InterruptedException {
 
+        if(cepOrigem.equals(cepDestino)){
+            return new Distancia(null, formatarCEP(cepOrigem), formatarCEP(cepDestino), "CEPs Iguais", "Mesmo CEP");
+        }
+
         if(distanciaRepository.findAllByCepOrigemDestino(formatarCEP(cepOrigem), formatarCEP(cepDestino)) == null){
             log.info("Inicinando consulta da distancia entre os CEPs");
             Cep origem = cepRepository.findAllByCep(formatarCEP(cepOrigem));
@@ -52,9 +56,13 @@ public class ConsultaDistancia {
             browserSetup.tearDown();
             log.info("Finalizou consulta da distancia entre os CEPs");
             Distancia distancia = new Distancia(null, formatarCEP(cepOrigem), formatarCEP(cepDestino), urlConsulta, getDistancia);
+            if(distanciaRepository.findAllByCepOrigemDestino(formatarCEP(cepOrigem), formatarCEP(cepDestino)) == null){
+                distanciaRepository.save(distancia);
+                return distancia;
+            }else{
+                return distanciaRepository.findAllByCepOrigemDestino(formatarCEP(cepOrigem), formatarCEP(cepDestino));
+            }
 
-            distanciaRepository.save(distancia);
-            return distancia;
         }else{
             log.info("Distância já calculada na base.");
             return distanciaRepository.findAllByCepOrigemDestino(formatarCEP(cepOrigem), formatarCEP(cepDestino));
