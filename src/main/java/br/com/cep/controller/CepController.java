@@ -55,7 +55,7 @@ public class CepController {
         }
     }
 
-    @GetMapping("/{cep}")
+    @GetMapping("/endereco/{cep}")
     public ResponseEntity getEndereco(@PathVariable String cep){
         return ResponseEntity.ok(new CepResponse(consultaCep.getEndereco(cep)));
     }

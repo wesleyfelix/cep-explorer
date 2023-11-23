@@ -2,6 +2,7 @@ package br.com.cep.domain.browser;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
 public class BrowserSetup {
     private WebDriver driver;
@@ -9,8 +10,14 @@ public class BrowserSetup {
     public BrowserSetup() {
         String driverPath = System.getProperty("user.dir") + "/geckodriver.exe";
 //        String driverPath = System.getProperty("user.dir") + "/src/main/java/br/com/setup/geckodriver.exe";
+
         System.setProperty("webdriver.gecko.driver", driverPath);
-        this.driver = new FirefoxDriver();
+
+        // Configurar as opções do Firefox para o modo headless
+        FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("--headless");
+
+        this.driver = new FirefoxDriver(options);
         this.driver.manage().window().maximize();
     }
 
