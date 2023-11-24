@@ -39,7 +39,7 @@ public class ConsultaDistancia {
     public Distancia consultaDistanciaOrigemDestino(String cepOrigem, String cepDestino) throws IOException, InterruptedException {
 
         if(cepOrigem.equals(cepDestino)){
-            return new Distancia(null, formatarCEP(cepOrigem), formatarCEP(cepDestino), "CEPs Iguais", "Mesmo CEP");
+            return new Distancia(null, formatarCEP(cepOrigem), formatarCEP(cepDestino), null, "Mesmo CEP");
         }
 
         if(distanciaRepository.findAllByCepOrigemDestino(formatarCEP(cepOrigem), formatarCEP(cepDestino)) == null){
@@ -47,8 +47,9 @@ public class ConsultaDistancia {
             Cep origem = cepRepository.findAllByCep(formatarCEP(cepOrigem));
             Cep destino = cepRepository.findAllByCep(formatarCEP(cepDestino));
             String urlGoogle = "https://www.google.com/maps/dir/";
-            String urlConsulta  = urlGoogle + origem.getLogradouro() + "+" + origem.getLocalidade() + "+" + origem.getUf() + "/" +
-                    destino.getLogradouro() + "+" + destino.getLocalidade() + "+" + destino.getUf();
+            String urlConsulta  = urlGoogle +
+                    origem.getLogradouro() + ", " + origem.getBairro() + "+" + origem.getLocalidade() + "+" + origem.getUf() + "/" +
+                    destino.getLogradouro() + ", " + destino.getBairro() + "+" + destino.getLocalidade() + "+" + destino.getUf();
 
             BrowserSetup browserSetup = new BrowserSetup();
             ConsultaDistanciaBrowser calculaDistancia = new ConsultaDistanciaBrowser(browserSetup.getDriver());
