@@ -1,6 +1,6 @@
 package br.com.cep.controller;
 
-import br.com.cep.domain.usuario.DadosCdadstroUsuario;
+import br.com.cep.domain.usuario.DadosCadadstroUsuario;
 import br.com.cep.domain.usuario.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/usuario")
@@ -46,7 +45,7 @@ public class AutenticacaoController {
 
     @PostMapping("/cadastrar")
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCdadstroUsuario dados) {
+    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadadstroUsuario dados) {
 
         if(repository.findAllByLogin(dados.login()) == null){
             String login = dados.login();
