@@ -15,28 +15,39 @@ public class ConsultaDistanciaBrowser {
     private WebDriverWait wait;
     public ConsultaDistanciaBrowser(WebDriver driver) {
         this.driver = driver;
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // 10 segundos de timeout
+        wait = new WebDriverWait(driver, Duration.ofSeconds(3)); // 10 segundos de timeout
     }
 
-    public String getDistancia(String url) throws IOException, InterruptedException {
+    public DistanciasTipo getDistancia(String url) throws IOException, InterruptedException {
         driver.get(url);
 
-        String distancia = "";
-        for (int tentativa = 1; tentativa <= 3; tentativa++) {
+        String distanciaPe = "";
+        String distanciaCarro = "";
+
+        for (int tentativa = 1; tentativa <= 4; tentativa++) {
             try {
                 WebElement aPeElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[@aria-label='A pé']")));
                 aPeElement.click();
-                WebElement distanciaElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[3]/div[8]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[4]/div[1]/div[1]/div/div[1]/div[2]")));
-                distancia = distanciaElement.getText();
+                WebElement distanciaElementPe = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[3]/div[8]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[4]/div[1]/div[1]/div/div[1]/div[2]")));
+                distanciaPe = distanciaElementPe.getText();
+
+//                WebElement carroElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[@aria-label='Carro']")));
+                WebElement carroElement = this.driver.findElement(By.xpath("//img[@aria-label='Carro']"));
+                carroElement.click();
+                WebElement distanciaElementCarro = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[3]/div[8]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[4]/div[1]/div[1]/div/div[1]/div[2]")));
+//                WebElement distanciaElementCarro = this.driver.findElement(By.xpath("/html/body/div[3]/div[8]/div[9]/div/div/div[1]/div[2]/div/div[1]/div/div/div[4]/div[1]/div[1]/div/div[1]/div[2]"));
+                distanciaCarro = distanciaElementCarro.getText();
+
                 break;
             } catch (Exception e) {
                 System.out.println("Tentativa " + tentativa + ": Elemento não encontrado. Atualizando a página.");
-                distancia = "Erro no momento de capturar Distância";
+                distanciaPe = "Erro no momento de capturar Distância";
                 driver.navigate().refresh();
             }
         }
 
-        return distancia;
+
+        return new DistanciasTipo(distanciaPe, distanciaCarro);
     }
 }
 

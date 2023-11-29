@@ -25,11 +25,6 @@ public class ConsultaDistancia {
 
     private static final Logger log = LoggerFactory.getLogger(ConsultaDistancia.class);
 
-
-
-    private static final String viaCepUrl = "https://viacep.com.br/ws/";
-
-
     @Autowired
     CepRepository cepRepository;
 
@@ -39,7 +34,7 @@ public class ConsultaDistancia {
     public Distancia consultaDistanciaOrigemDestino(String cepOrigem, String cepDestino) throws IOException, InterruptedException {
 
         if(cepOrigem.equals(cepDestino)){
-            return new Distancia(null, formatarCEP(cepOrigem), formatarCEP(cepDestino), null, "Mesmo CEP");
+            return new Distancia(null, formatarCEP(cepOrigem), formatarCEP(cepDestino), null, "Mesmo CEP", "Mesmo CEP");
         }
 
         if(distanciaRepository.findAllByCepOrigemDestino(formatarCEP(cepOrigem), formatarCEP(cepDestino)) == null){
@@ -53,10 +48,10 @@ public class ConsultaDistancia {
 
             BrowserSetup browserSetup = new BrowserSetup();
             ConsultaDistanciaBrowser calculaDistancia = new ConsultaDistanciaBrowser(browserSetup.getDriver());
-            String getDistancia = calculaDistancia.getDistancia(urlConsulta);
+            DistanciasTipo getDistancia = calculaDistancia.getDistancia(urlConsulta);
             browserSetup.tearDown();
             log.info("Finalizou consulta da distancia entre os CEPs");
-            Distancia distancia = new Distancia(null, formatarCEP(cepOrigem), formatarCEP(cepDestino), urlConsulta, getDistancia);
+            Distancia distancia = new Distancia(null, formatarCEP(cepOrigem), formatarCEP(cepDestino), urlConsulta, getDistancia.pe(), getDistancia.carro());
             if(distanciaRepository.findAllByCepOrigemDestino(formatarCEP(cepOrigem), formatarCEP(cepDestino)) == null){
                 distanciaRepository.save(distancia);
                 return distancia;

@@ -49,7 +49,7 @@ public class CepController {
             Distancia dist = consultaDistancia.consultaDistanciaOrigemDestino(cepOrigem, cepDestino);
             return ResponseEntity.ok(new DistanciaResponse(dist));
         }else {
-            Distancia dist = new Distancia(null, formatarCEP(cepOrigem), formatarCEP(cepDestino), null, "Cep Origem/Destino não consta no viaCEP");
+            Distancia dist = new Distancia(null, formatarCEP(cepOrigem), formatarCEP(cepDestino), null, "Cep Origem/Destino não consta no viaCEP", "Cep Origem/Destino não consta no viaCEP" );
             distanciaRepository.save(dist);
             return ResponseEntity.ok().body(new DistanciaResponse(dist));
         }

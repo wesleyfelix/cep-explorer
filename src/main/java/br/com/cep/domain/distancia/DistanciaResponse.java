@@ -1,7 +1,8 @@
 package br.com.cep.domain.distancia;
 
-public record DistanciaResponse(String distancia, String url) {
+public record DistanciaResponse(String distanciaPe, String distanciaCarro, String url) {
     public DistanciaResponse(Distancia distancia){
-        this(distancia.getDistancia(), distancia.getUrl());
+
+        this(distancia.getDistanciaPe(), distancia.getDistanciaCarro(), distancia.getUrl());
     }
 }

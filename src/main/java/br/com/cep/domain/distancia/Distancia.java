@@ -21,5 +21,6 @@ public class Distancia {
     private String cepOrigem;
     private String cepDestino;
     private String url;
-    private String distancia;
+    private String distanciaPe;
+    private String distanciaCarro;
 }
